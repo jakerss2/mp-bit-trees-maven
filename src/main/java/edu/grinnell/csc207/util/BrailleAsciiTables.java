@@ -205,7 +205,18 @@ public class BrailleAsciiTables {
    *
    */
   public static String toBraille(char letter) {
-    return "";  // STUB
+    // Make sure we've loaded the ASCII-to-braille tree.
+    if (null == a2bTree) {
+      a2bTree = new BitTree(8);
+      InputStream a2bStream = new ByteArrayInputStream(a2b.getBytes());
+      a2bTree.load(a2bStream);
+      try {
+        a2bStream.close();
+      } catch (IOException e) {
+        // We don't care if we can't close the stream.
+      } // try/catch
+    }
+    return a2bTree.get("0" + java.lang.Integer.toBinaryString(letter));
   } // toBraille(char)
 
   /**
@@ -223,13 +234,43 @@ public class BrailleAsciiTables {
         // We don't care if we can't close the stream.
       } // try/catch
     } // if
-    return "";  // STUB
+    String str = "";
+    for (int i = 0; i < bits.length(); i += 6) {
+      str += b2aTree.get(bits.substring(i, i + 6));
+    } // for
+    return str;
   } // toAscii(String)
 
   /**
    *
    */
   public static String toUnicode(String bits) {
-    return "";  // STUB
+    // Make sure we've loaded the braille-to-unicode tree.
+    if (null == b2uTree) {
+      b2uTree = new BitTree(6);
+      InputStream b2uStream = new ByteArrayInputStream(b2u.getBytes());
+      b2uTree.load(b2uStream);
+      try {
+        b2uStream.close();
+      } catch (IOException e) {
+        // We don't care if we can't close the stream.
+      } // try/catch
+    }
+    String str = "";
+    String uni = "";
+    System.out.println(bits);
+    for (int i = 0; i < bits.toCharArray().length; i += 6) {
+      str = b2uTree.get(bits.substring(i, (i + 6)));
+      System.out.println(str);
+      uni += convert(str);
+    } // for
+    return uni;
   } // toUnicode(String)
+
+  /**
+   * Convert a hex string to unicode.
+   */
+  public static String convert(String hex) {
+    return new String(Character.toChars(Integer.parseInt(hex, 16)));
+  } // convert
 } // BrailleAsciiTables
