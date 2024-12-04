@@ -1,9 +1,10 @@
 package edu.grinnell.csc207.util;
 
-public interface BitTreeNode<T extends Comparable<T>> {
+public interface BitTreeNode<T> {
   /**
    * 
-   * @param element the value we will set in its proper place in the tree
+   * @param element 
+   *  the value we will set in its proper place in the tree
    */
   void setValue (T element);
 
@@ -28,12 +29,14 @@ public interface BitTreeNode<T extends Comparable<T>> {
   /**
    * Set the child to the left
    * @param left
+   *  Tree that goes to the left
    */
   void setLeft(BitTreeNode<T> left);
 
   /**
    * Set the child to the right
    * @param right
+   *  Tree that goes to the right
    */
   void setRight(BitTreeNode<T> right);
-}
+} // interface BitTreeNode<T>
