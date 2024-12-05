@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Intended to translate ASCII, braille, and unicode between each other.
  *
+ * Convert was made by @author Samuel A. Rebelsky and the CSC-207 2024Fa class.
  *
  * @author Jacob Bell
  * @author Samuel A. Rebelsky
@@ -288,7 +290,7 @@ public class BrailleAsciiTables {
   } // toUnicode(String)
 
   /**
-   * Convert a hex string to unicode.
+   * Convert a hex string to unicode by Sam A. Rebelsky and CSC-207 2024Fa.
    *
    * @param hex
    *  The hex code for the Unicode braille we want.
