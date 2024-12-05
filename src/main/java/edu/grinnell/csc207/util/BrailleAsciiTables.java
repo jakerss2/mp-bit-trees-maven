@@ -18,7 +18,7 @@ public class BrailleAsciiTables {
   /**
    * Conversions from ASCII to braille.
    */
-  static final String a2b = 
+  static final String a2b =
       "01000001,100000\n"
       + "01000010,110000\n"
       + "01000011,100100\n"
@@ -179,17 +179,17 @@ public class BrailleAsciiTables {
   // +---------------+
 
   /**
-   *
+   * Will hold our mappings for ascii to braille binary.
    */
   static BitTree a2bTree = null;
 
   /**
-   *
+   * The mapping holding braille to ascii.
    */
   static BitTree b2aTree = null;
 
   /**
-   *
+   * The mapping holding our braille to unicode.
    */
   static BitTree b2uTree = null;
 
@@ -202,7 +202,13 @@ public class BrailleAsciiTables {
   // +----------------+
 
   /**
+   * Convert a singular letter to the
+   * representation of braille in binary.
    *
+   * @param letter
+   *  The letter we want to translate.
+   * @return
+   *  The binary representation of braille.
    */
   public static String toBraille(char letter) {
     // Make sure we've loaded the ASCII-to-braille tree.
@@ -215,14 +221,24 @@ public class BrailleAsciiTables {
       } catch (IOException e) {
         // We don't care if we can't close the stream.
       } // try/catch
-    }
+    } // if
     return a2bTree.get("0" + java.lang.Integer.toBinaryString(letter));
   } // toBraille(char)
 
   /**
+   * Turn the representation of braille
+   * in binary to ASCII.
    *
+   * @param bits
+   *  Binary represenation of characters.
+   * @return
+   *  The string of bits as ASCII.
    */
   public static String toAscii(String bits) {
+    if (bits.length() % 6 != 0) {
+      return ("Invalid length of bit string");
+    } // if
+
     // Make sure we've loaded the braille-to-ASCII tree.
     if (null == b2aTree) {
       b2aTree = new BitTree(6);
@@ -242,7 +258,13 @@ public class BrailleAsciiTables {
   } // toAscii(String)
 
   /**
+   * Turn the binary representation of braille
+   * into the unicode character for braille.
    *
+   * @param bits
+   *  Binary representation of braille.
+   * @return
+   *  String that represents braille.
    */
   public static String toUnicode(String bits) {
     // Make sure we've loaded the braille-to-unicode tree.
@@ -255,13 +277,11 @@ public class BrailleAsciiTables {
       } catch (IOException e) {
         // We don't care if we can't close the stream.
       } // try/catch
-    }
+    } // if
     String str = "";
     String uni = "";
-    System.out.println(bits);
     for (int i = 0; i < bits.toCharArray().length; i += 6) {
       str = b2uTree.get(bits.substring(i, (i + 6)));
-      System.out.println(str);
       uni += convert(str);
     } // for
     return uni;
@@ -269,6 +289,11 @@ public class BrailleAsciiTables {
 
   /**
    * Convert a hex string to unicode.
+   *
+   * @param hex
+   *  The hex code for the Unicode braille we want.
+   * @return
+   *  A string that is the braille character for the given hex.
    */
   public static String convert(String hex) {
     return new String(Character.toChars(Integer.parseInt(hex, 16)));

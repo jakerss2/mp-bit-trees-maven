@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
- * Trees intended to be used in storing mappings between fixed-length 
+ * Trees intended to be used in storing mappings between fixed-length
  * sequences of bits and corresponding values.
  *
  * @author Jacob Bell
@@ -17,19 +17,21 @@ public class BitTree {
   // | Fields |
   // +--------+
 
-  /** The root of our bit tree */
-  BitTreeNode root = null;
+  /** The root of our bit tree. */
+  BitTreeNode<String> root = null;
 
-  /** The height of the tree */
+  /** The height of the tree (never read). */
   int size;
-
 
   // +--------------+------------------------------------------------
   // | Constructors |
   // +--------------+
 
   /**
+   * Create a new BitTree with size n.
    *
+   * @param n
+   *  The supposed size, but can be different.
    */
   public BitTree(int n) {
     this.root = new BitTreeNodeInterior<>();
@@ -45,7 +47,7 @@ public class BitTree {
   // +---------+
 
   /**
-   * 
+   *
    * @param bits
    *  Determines the path of where the value goes
    * @param value
@@ -59,12 +61,12 @@ public class BitTree {
       if (curBit == '0') {
         if (current.getLeft() == null) {
           current.setLeft(new BitTreeNodeInterior());
-        }
+        } // if
         current = current.getLeft();
       } else if (curBit == '1') {
-          if (current.getRight() == null) {
-            current.setRight(new BitTreeNodeInterior());
-          }
+        if (current.getRight() == null) {
+          current.setRight(new BitTreeNodeInterior());
+        } // if
         current = current.getRight();
       } else {
         throw new IndexOutOfBoundsException("Error: Invalid character " + curBit);
@@ -85,7 +87,7 @@ public class BitTree {
   /**
    * Find the value associated with
    * the given bits.
-   * 
+   *
    * @param bits
    *  The bits we are trying to find the value for
    * @return The string associated with the given bits
@@ -97,27 +99,31 @@ public class BitTree {
       char curBit = bits.charAt(i);
       if (curBit == '0') {
         if (current.getLeft() == null) {
-          throw new IndexOutOfBoundsException("Error: The tree does not have node at index: "
-              + i + " of string " + bits);
+          throw new IndexOutOfBoundsException("Trouble translating because"
+              + "No corresponding value");
         } // if
         current = current.getLeft();
       } else if (curBit == '1') {
-          if (current.getRight() == null) {
-            throw new IndexOutOfBoundsException("Error: The tree does not have node at index: "
-                + i + " of string " + bits);
-          } // if
+        if (current.getRight() == null) {
+          throw new IndexOutOfBoundsException("Trouble translating because"
+              + "No corresponding value");
+        } // if
         current = current.getRight();
       } else {
         throw new IndexOutOfBoundsException("Error: Invalid character " + curBit);
       } // if/else
     } // for
-    return (String) current.getValue();
+    try {
+      return (String) current.getValue();
+    } catch (Exception e) {
+      return "Error";
+    } // try/catch
   } // get(String, String)
 
   /**
    * Call our recursive function to
    * print our tree with the given pen.
-   * 
+   *
    * @param pen
    *  The place where we will print our tree
    */
@@ -127,8 +133,8 @@ public class BitTree {
 
   /**
    * Store a series of lines in the
-   * form of 'bits,values' into our tree
-   * 
+   * form of 'bits,values' into our tree.
+   *
    * @param source
    *   The source of lines we will store
    */
@@ -138,7 +144,7 @@ public class BitTree {
       String line = read.readLine();
       while (line != null) {
         line = line.trim();
-        String [] bitVal = line.split(",", 2);
+        String[] bitVal = line.split(",", 2);
         set(bitVal[0], bitVal[1]); // An eboard said we can assume all input is valid
         // I was going to check if the line splits properly or other issues
         line = read.readLine();
@@ -152,8 +158,8 @@ public class BitTree {
   /**
    * Recursively add bits together
    * until we reach the end of the tree
-   * and print the tree in bits,value form
-   * 
+   * and print the tree in bits,value form.
+   *
    * @param pen
    *  The place where we will print our tree
    * @param bt
